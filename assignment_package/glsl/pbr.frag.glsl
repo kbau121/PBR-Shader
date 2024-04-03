@@ -35,6 +35,18 @@ out vec4 out_Col;
 
 const float PI = 3.14159f;
 
+// Reinhard operator tone mapping
+vec3 reinhard(vec3 in_Col)
+{
+    return in_Col / (vec3(1.f) + in_Col);
+}
+
+// Gamma correction
+vec3 gammaCorrect(vec3 in_Col)
+{
+    return pow(in_Col, vec3(1.f / 2.2f));
+}
+
 // Set the input material attributes to texture-sampled values
 // if the indicated booleans are TRUE
 void handleMaterialMaps(inout vec3 albedo, inout float metallic,
@@ -67,5 +79,11 @@ void main()
 
     handleMaterialMaps(albedo, metallic, roughness, ambientOcclusion, N);
 
-    out_Col = vec4(1.f);
+    vec3 diffuseIrradiance = texture(u_DiffuseIrradianceMap, N).rgb;
+    vec3 Lo = albedo * diffuseIrradiance;
+
+    Lo = reinhard(Lo);
+    Lo = gammaCorrect(Lo);
+
+    out_Col = vec4(Lo, 1.f);
 }
