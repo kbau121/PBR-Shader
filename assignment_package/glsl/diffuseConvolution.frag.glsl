@@ -16,15 +16,15 @@ void main()
 {
     // The normal and orientation of the hemisphere
     // is simply the direction of the position
-    vec3 normal = normalize(fs_Pos);
+    vec3 N = normalize(fs_Pos);
 
     // Average of all irradiance samples
     vec3 irradiance  = vec3(0.f);
 
     // Tangent space directions at the point
     vec3 up = vec3(0.f, 1.f, 0.f);
-    vec3 right = normalize(cross(up, normal));
-    up = cross(normal, right);
+    vec3 right = normalize(cross(up, N));
+    up = cross(N, right);
 
     // Sample around the hemisphere
     float sampleDelta = 0.025;
@@ -36,10 +36,10 @@ void main()
             // Spherical to cartesian
             vec3 tangentSample = vec3(sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta));
             // Tangent to world space
-            vec3 sampleVec = tangentSample.x * right + tangentSample.y * up + tangentSample.z * normal;
+            vec3 wi = tangentSample.x * right + tangentSample.y * up + tangentSample.z * N;
 
             // Sample the environment map
-            irradiance += texture(u_EnvironmentMap, sampleVec).rgb * cos(theta) * sin(theta);
+            irradiance += texture(u_EnvironmentMap, wi).rgb * cos(theta) * sin(theta);
             nrSamples++;
         }
     }

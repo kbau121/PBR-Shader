@@ -27,7 +27,7 @@ vec2 Hammersley(uint i, uint N)
     return vec2(float(i) / float(N), RadicalInverse_VdC(i));
 }
 
-vec3 ImportanceSampleCGX(vec2 xi, vec3 N, float roughness)
+vec3 ImportanceSampleGGX(vec2 xi, vec3 N, float roughness)
 {
     float alpha = roughness * roughness;
 
@@ -36,25 +36,24 @@ vec3 ImportanceSampleCGX(vec2 xi, vec3 N, float roughness)
     float sinTheta = sqrt(1.f - cosTheta * cosTheta);
 
     // Spherical to Cartesian
-    vec3 H = vec3(cos(phi) * sinTheta, sin(phi) * sinTheta, cosTheta);
+    vec3 wi = vec3(cos(phi) * sinTheta, sin(phi) * sinTheta, cosTheta);
 
     // Tangent to world space
     vec3 up = abs(N.z) < 0.999f ? vec3(0.f, 0.f, 1.f) : vec3(1.f, 0.f, 0.f);
     vec3 tangent = normalize(cross(up, N));
     vec3 bitangent = cross(N, tangent);
 
-    vec3 sampleVec = tangent * H.x + bitangent * H.y + N * H.z;
+    vec3 wh = tangent * wi.x + bitangent * wi.y + N * wi.z;
 
 
-    return normalize(sampleVec);
+    return normalize(wh);
 }
 
 void main() {
     float roughness = u_Roughness;
 
     vec3 N = normalize(fs_Pos);
-    vec3 R = N;
-    vec3 V = R;
+    vec3 wi = N;
 
     // Sample and weight samples over the environment map
     const uint SAMPLE_COUNT = 1024u;
@@ -63,13 +62,13 @@ void main() {
     for (uint i = 0u; i < SAMPLE_COUNT; ++i)
     {
         vec2 xi = Hammersley(i, SAMPLE_COUNT);
-        vec3 H = ImportanceSampleCGX(xi, N, roughness);
-        vec3 L = normalize(2.f * dot(V, H) * H - V);
+        vec3 wh = ImportanceSampleGGX(xi, N, roughness);
+        vec3 wo = normalize(2.f * dot(wi, wh) * wh - wi);
 
-        float NdotL = max(dot(N, L), 0.f);
-        if (NdotL > 0.f) {
-            prefilteredColor += texture(u_EnvironmentMap, L).rgb * NdotL;
-            totalWeight += NdotL;
+        float NdotWo = max(dot(N, wo), 0.f);
+        if (NdotWo > 0.f) {
+            prefilteredColor += texture(u_EnvironmentMap, wo).rgb * NdotWo;
+            totalWeight += NdotWo;
         }
     }
     prefilteredColor /= totalWeight;
