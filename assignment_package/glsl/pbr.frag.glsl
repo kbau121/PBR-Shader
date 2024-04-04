@@ -38,7 +38,7 @@ const float PI = 3.14159f;
 // Schlick's fresnel approximation accounting for roughness
 vec3 fresnelRoughness(float cosViewAngle, vec3 R, float roughness)
 {
-    return R + (max(vec3(1.f - roughness), R) - R) * pow(1.f - cosViewAngle, 5.f);
+    return R + (max(vec3(1.f - roughness), R) - R) * pow(max(1.f - cosViewAngle, 0.f), 5.f);
 }
 
 // Reinhard operator tone mapping
@@ -72,7 +72,7 @@ void handleMaterialMaps(inout vec3 albedo, inout float metallic,
     }
     if(u_UseNormalMap) {
         // Get the normal and map it to a [-1, 1] range
-        normal = texture(u_NormalMap, fs_UV).xyz;
+        normal = texture(u_NormalMap, fs_UV).rgb;
         normal = normalize(normal * 2.f - 1.f);
         // Tangent to world space
         normal = mat3(fs_Tan, fs_Bit, fs_Nor) * normal;
