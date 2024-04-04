@@ -24,7 +24,7 @@ void main()
     // Tangent space directions at the point
     vec3 up = vec3(0.f, 1.f, 0.f);
     vec3 right = normalize(cross(up, normal));
-    up = normalize(cross(normal, right));
+    up = cross(normal, right);
 
     // Sample around the hemisphere
     float sampleDelta = 0.025;
