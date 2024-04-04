@@ -3,6 +3,64 @@ Physically-Based Shaders Part II: Environment Maps
 
 **University of Pennsylvania, CIS 561: Advanced Computer Graphics, Homework 7**
 
+Submission
+------------
+Kyle Bauer<br>kbau121
+
+**Late Day 1/3 used**
+
+Sample Screenshots
+
+![](output/0Metal0Rough.png)
+
+![](output/100Metal0Rough.png)
+
+![](output/100Metal25Rough.png)
+
+![](output/cerberusRotatedCamera.png)
+
+Example Screenshots
+
+![](output/defaultAttribs.png)
+
+![](output/fullMetal0Rough.png)
+
+![](output/fullMetal25Rough.png)
+
+![](output/fullMetal50Rough.png)
+
+![](output/fullMetal75Rough.png)
+
+![](output/fullMetalFullRough.png)
+
+Diffuse Irradiance Precomputation Screenshots
+
+![](output/diffuseIrradianceAtelier.png)
+
+![](output/diffuseIrradianceFireplace.png)
+
+Diffuse Irradiance in the PBR Shader Screenshots
+
+![](output/diffuseMaterialAtelier.png)
+
+![](output/diffuseMaterialFireplace.png)
+
+![](output/diffuseMaterialFireplaceBack.png)
+
+Glossy Irradiance Precomputation Screenshots
+
+![](output/glossyIrradianceAtelier.png)
+
+![](output/glossyIrradiancePanorama.png)
+
+Other Screenshots
+
+![](output/obsidianDefaultCamera.png)
+
+![](output/obsidianRotatedCamera.png)
+
+![](output/fullPlastic0Rough.png)
+
 Overview
 ------------
 You will take what you learned in part I of this physically-based shader assignment and
