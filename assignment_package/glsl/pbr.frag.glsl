@@ -71,7 +71,11 @@ void handleMaterialMaps(inout vec3 albedo, inout float metallic,
         ambientOcclusion = texture(u_AOMap, fs_UV).r;
     }
     if(u_UseNormalMap) {
-        // TODO: Apply normal mapping
+        // Get the normal and map it to a [-1, 1] range
+        normal = texture(u_NormalMap, fs_UV).xyz;
+        normal = normalize(normal * 2.f - 1.f);
+        // Tangent to world space
+        normal = mat3(fs_Tan, fs_Bit, fs_Nor) * normal;
     }
 }
 

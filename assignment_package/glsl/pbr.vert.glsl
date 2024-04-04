@@ -35,8 +35,9 @@ void main()
     vec3 N = vs_Nor;
     vec3 displacedPos = vs_Pos;
     if(u_UseDisplacementMap) {
-        // TODO: Apply displacement mapping with
-        // u_DisplacementMap and u_DisplacementMagnitude
+        float displacementAmount = texture(u_DisplacementMap, vs_UV).r * u_DisplacementMagnitude;
+
+        displacedPos += displacementAmount * N;
     }
 
     vec4 modelposition = u_Model * vec4(displacedPos, 1.f);
