@@ -113,7 +113,7 @@ void main()
     vec3 specular = prefilteredColor * (F * envBRDF.x + envBRDF.y);
 
     // Ambient color
-    vec3 ambient = vec3(0.03f * ambientOcclusion);
+    vec3 ambient = 0.03f * albedo * ambientOcclusion;
 
     // Cook-Torrence lighting
     vec3 Lo = ambient + kd * diffuse + specular;

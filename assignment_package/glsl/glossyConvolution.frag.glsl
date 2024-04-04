@@ -56,7 +56,7 @@ void main() {
     vec3 wi = N;
 
     // Sample and weight samples over the environment map
-    const uint SAMPLE_COUNT = 1024u;
+    const uint SAMPLE_COUNT = 4096u;
     float totalWeight = 0.f;
     vec3 prefilteredColor = vec3(0.f);
     for (uint i = 0u; i < SAMPLE_COUNT; ++i)
