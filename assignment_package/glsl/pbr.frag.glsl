@@ -90,24 +90,31 @@ void main()
     vec3 R = mix(vec3(0.04f), albedo, metallic);
     vec3 F = fresnelRoughness(max(dot(N, wo), 0.f), R, roughness);
 
+    // Cook-Torrence weights
     vec3 ks = F;
     vec3 kd = 1.f - ks;
     kd *= 1.f - metallic;
 
+    // Diffuse color
     vec3 diffuseIrradiance = texture(u_DiffuseIrradianceMap, N).rgb;
     vec3 diffuse = albedo * diffuseIrradiance;
 
+    // Sample the glossy irradiance map
     vec3 wi = reflect(-wo, N);
     const float MAX_REFLECTION_LOD = 4.f;
     vec3 prefilteredColor = textureLod(u_GlossyIrradianceMap, wi, roughness * MAX_REFLECTION_LOD).rgb;
 
+    // Specular color
     vec2 envBRDF = texture(u_BRDFLookupTexture, vec2(max(dot(N, wo), 0.f), roughness)).rg;
     vec3 specular = prefilteredColor * (F * envBRDF.x + envBRDF.y);
 
+    // Ambient color
     vec3 ambient = (kd * diffuse + specular) * ambientOcclusion;
 
+    // Cook-Torrence lighting
     vec3 Lo = ambient + kd * diffuse + specular;
 
+    // Tone mapping
     Lo = reinhard(Lo);
     Lo = gammaCorrect(Lo);
 
